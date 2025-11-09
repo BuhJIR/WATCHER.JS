@@ -304,26 +304,26 @@
     function updateColorsFromPicker() {
         if (!dreamColorPicker || !dreamColorPicker.colors || dreamColorPicker.colors.length < 3) return;
 
-        // Получаем hex цвета из color picker
-        const color1 = dreamColorPicker.colors[0].hexString; // Light colour (зрачок)
+        // ÐÐ¾Ð»ÑÑÐ°ÐµÐ¼ hex ÑÐ²ÐµÑÐ° Ð¸Ð· color picker
+        const color1 = dreamColorPicker.colors[0].hexString; // Light colour (Ð·ÑÐ°ÑÐ¾Ðº)
         const color2 = dreamColorPicker.colors[1].hexString; // Square colour
-        const color3 = dreamColorPicker.colors[2].hexString; // Window colour (БЕЗ приглушения)
+        const color3 = dreamColorPicker.colors[2].hexString; // Window colour (ÐÐÐ Ð¿ÑÐ¸Ð³Ð»ÑÑÐµÐ½Ð¸Ñ)
 
-        // Применяем цвета
-        eyeColor = color1; // Основной цвет глаза
+        // ÐÑÐ¸Ð¼ÐµÐ½ÑÐµÐ¼ ÑÐ²ÐµÑÐ°
+        eyeColor = color1; // ÐÑÐ½Ð¾Ð²Ð½Ð¾Ð¹ ÑÐ²ÐµÑ Ð³Ð»Ð°Ð·Ð°
 
-        // Обновляем цвет границы глаза
+        // ÐÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÐ²ÐµÑ Ð³ÑÐ°Ð½Ð¸ÑÑ Ð³Ð»Ð°Ð·Ð°
         eye.style.borderColor = color1;
         eye.style.boxShadow = `inset 0 0 20px rgba(0,0,0,0.5)`;
 
-        // Обновляем цвет ириса
+        // ÐÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÐ²ÐµÑ Ð¸ÑÐ¸ÑÐ°
         iris.style.background = `radial-gradient(circle, transparent 0%, transparent 50%, ${color2} 51%, ${color2} 100%)`;
 
-        // Обновляем цвета меню (используем все три цвета БЕЗ приглушения)
+        // ÐÐ±Ð½Ð¾Ð²Ð»ÑÐµÐ¼ ÑÐ²ÐµÑÐ° Ð¼ÐµÐ½Ñ (Ð¸ÑÐ¿Ð¾Ð»ÑÐ·ÑÐµÐ¼ Ð²ÑÐµ ÑÑÐ¸ ÑÐ²ÐµÑÐ° ÐÐÐ Ð¿ÑÐ¸Ð³Ð»ÑÑÐµÐ½Ð¸Ñ)
         const menuColorsPalette = [
             color1,
             color2,
-            color3, // НОРМАЛЬНЫЙ третий цвет без приглушения
+            color3, // ÐÐÐ ÐÐÐÐ¬ÐÐ«Ð ÑÑÐµÑÐ¸Ð¹ ÑÐ²ÐµÑ Ð±ÐµÐ· Ð¿ÑÐ¸Ð³Ð»ÑÑÐµÐ½Ð¸Ñ
             adjustBrightness(color1, 15),
             adjustBrightness(color2, -10),
             adjustBrightness(color3, 20),
@@ -667,7 +667,7 @@
                 if (timeSinceLastClick < DOUBLE_CLICK_DELAY) {
                     // Reset scene
                     if (dreamClearScene && typeof dreamClearScene === 'function') {
-                        // Эффект сброса
+                        // Ð­ÑÑÐµÐºÑ ÑÐ±ÑÐ¾ÑÐ°
                         eye.classList.add('hovering');
                         pupil.classList.add('hovering');
 
@@ -749,14 +749,13 @@
     // Global remove function
     window.removeWatcher = function() {
         document.getElementById('watcher-widget')?.remove();
-        document.getElementById('watcher-styles')?.remove();
+document.getElementById('watcher-styles')?.remove();
         delete window.WATCHER_LOADED;
         delete window.removeWatcher;
         delete window.WATCHER;
         console.log('WATCHER removed!');
     };
-
-    console.log('%c👁️ WATCHER loaded!', 'font-size: 20px; color: #D4BBFF;');
+    console.log('%cðï¸ WATCHER loaded!', 'font-size: 20px; color: #D4BBFF;');
     console.log('%cDrag to move, click to open menu, double-click to reset scene', 'color: #FFB3D9;');
     console.log('%cRemove with: removeWatcher()', 'color: #A5D8FF;');
 })();

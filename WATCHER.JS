@@ -456,35 +456,44 @@
 
     // Word detection
     function getWordAtPoint(elem, x, y) {
-        if(elem.nodeType == elem.TEXT_NODE) {
-            var range = elem.ownerDocument.createRange();
-            range.selectNodeContents(elem);
-            var currentPos = 0;
-            var endPos = range.endOffset;
-            while(currentPos+1 < endPos) {
-                range.setStart(elem, currentPos);
-                range.setEnd(elem, currentPos+1);
-                if(range.getBoundingClientRect().left <= x && range.getBoundingClientRect().right >= x &&
-                   range.getBoundingClientRect().top <= y && range.getBoundingClientRect().bottom >= y) {
-                    range.expand("word");
-                    var ret = range.toString();
-                    range.detach();
-                    return ret;
+        if (!elem) return null;
+        try {
+            if (elem.nodeType === elem.TEXT_NODE) {
+                const range = elem.ownerDocument.createRange();
+                range.selectNodeContents(elem);
+                const endPos = range.endOffset;
+                for (let pos = 0; pos + 1 < endPos; pos++) {
+                    range.setStart(elem, pos);
+                    range.setEnd(elem, pos + 1);
+                    const rect = range.getBoundingClientRect();
+                    if (rect.left <= x && rect.right >= x && rect.top <= y && rect.bottom >= y) {
+                        try {
+                            range.expand("word");
+                            const ret = range.toString();
+                            range.detach();
+                            return ret;
+                        } catch (e) {
+                            range.detach();
+                            return null;
+                        }
+                    }
                 }
-                currentPos += 1;
-            }
-        } else {
-            for(var i = 0; i < elem.childNodes.length; i++) {
-                var childRange = elem.childNodes[i].ownerDocument.createRange();
-                childRange.selectNodeContents(elem.childNodes[i]);
-                if(childRange.getBoundingClientRect().left <= x && childRange.getBoundingClientRect().right >= x &&
-                   childRange.getBoundingClientRect().top <= y && childRange.getBoundingClientRect().bottom >= y) {
+                range.detach();
+            } else if (elem.childNodes) {
+                for (let i = 0; i < elem.childNodes.length; i++) {
+                    const child = elem.childNodes[i];
+                    if (!child || !child.ownerDocument) continue;
+                    const childRange = child.ownerDocument.createRange();
+                    childRange.selectNodeContents(child);
+                    const rect = childRange.getBoundingClientRect();
                     childRange.detach();
-                    return getWordAtPoint(elem.childNodes[i], x, y);
-                } else {
-                    childRange.detach();
+                    if (rect.left <= x && rect.right >= x && rect.top <= y && rect.bottom >= y) {
+                        return getWordAtPoint(child, x, y);
+                    }
                 }
             }
+        } catch (e) {
+            return null;
         }
         return null;
     }

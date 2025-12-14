@@ -454,28 +454,34 @@
         `;
     }
 
-    // Word detection
+    // Word detection - extracts word at cursor position
     function getWordAtPoint(elem, x, y) {
         if (!elem) return null;
         try {
             if (elem.nodeType === elem.TEXT_NODE) {
+                const text = elem.textContent;
+                if (!text) return null;
+
                 const range = elem.ownerDocument.createRange();
-                range.selectNodeContents(elem);
-                const endPos = range.endOffset;
-                for (let pos = 0; pos + 1 < endPos; pos++) {
+
+                // Find character position under cursor
+                for (let pos = 0; pos < text.length; pos++) {
                     range.setStart(elem, pos);
                     range.setEnd(elem, pos + 1);
                     const rect = range.getBoundingClientRect();
                     if (rect.left <= x && rect.right >= x && rect.top <= y && rect.bottom >= y) {
-                        try {
-                            range.expand("word");
-                            const ret = range.toString();
-                            range.detach();
-                            return ret;
-                        } catch (e) {
-                            range.detach();
-                            return null;
-                        }
+                        // Found the character, now find word boundaries
+                        let start = pos, end = pos;
+                        const isWordChar = c => /\w/.test(c);
+
+                        // Expand left
+                        while (start > 0 && isWordChar(text[start - 1])) start--;
+                        // Expand right
+                        while (end < text.length - 1 && isWordChar(text[end + 1])) end++;
+
+                        const word = text.slice(start, end + 1);
+                        range.detach();
+                        return word.length > 0 ? word : null;
                     }
                 }
                 range.detach();
